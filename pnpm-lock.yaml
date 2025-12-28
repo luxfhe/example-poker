@@ -42,7 +42,7 @@ importers:
       '@ethersproject/providers':
         specifier: ~5.7.1
         version: 5.7.2
-      '@fhenixprotocol/contracts':
+      '@luxfheprotocol/contracts':
         specifier: 0.3.0-alpha.6
         version: 0.3.0-alpha.6
       '@nomicfoundation/hardhat-chai-matchers':
@@ -108,16 +108,16 @@ importers:
       ethers:
         specifier: ~6.10.0
         version: 6.10.0
-      fhenix-hardhat-docker:
+      luxfhe-hardhat-docker:
         specifier: ~0.3.2
         version: 0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6))
-      fhenix-hardhat-network:
+      luxfhe-hardhat-network:
         specifier: ~0.3.2
-        version: 0.3.2(@fhenixprotocol/contracts@0.3.0-alpha.6)(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6))
-      fhenix-hardhat-plugin:
+        version: 0.3.2(@luxfheprotocol/contracts@0.3.0-alpha.6)(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6))
+      luxfhe-hardhat-plugin:
         specifier: ~0.3.2
         version: 0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6))
-      fhenixjs:
+      luxfhejs:
         specifier: ~0.4.1
         version: 0.4.1
       hardhat:
@@ -183,7 +183,7 @@ importers:
       ethers:
         specifier: ~6.11.1
         version: 6.11.1
-      fhenixjs:
+      luxfhejs:
         specifier: ~0.4.1
         version: 0.4.1
       framer-motion:
@@ -548,7 +548,7 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
-  '@fhenixprotocol/contracts@0.3.0-alpha.6':
+  '@luxfheprotocol/contracts@0.3.0-alpha.6':
     resolution: {integrity: sha512-ZupAxZtPWkJEBqdOyeVz7vnzJuLRXGGXLvk+rm7uSwFm//ZgNgpVtGjM8cDijbK1yxtQXqhPN8fnnMfGOsGXNw==}
 
   '@heroicons/react@2.0.18':
@@ -3175,23 +3175,23 @@ packages:
   fd-slicer@1.1.0:
     resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
 
-  fhenix-hardhat-docker@0.3.2:
+  luxfhe-hardhat-docker@0.3.2:
     resolution: {integrity: sha512-fqPzwt0EqxvVg5hr1LVJ8BKyvQeOFITWv+ieyQMtd0o4DYobKUw6g3t4o9OKMs4eT+V8/lAyGFjDLxD2BBRKhA==}
     peerDependencies:
       hardhat: ^2.11.0
 
-  fhenix-hardhat-network@0.3.2:
+  luxfhe-hardhat-network@0.3.2:
     resolution: {integrity: sha512-cvnGKGxDtHobl8np2Fxw4/n39AGARVCmk+DyAnc68XHBeaRtY3l8Iwkwb4LFN4N6RKJXx1VhEcSfpLO3tS8uiw==}
     peerDependencies:
-      '@fhenixprotocol/contracts': ^0.3.0
+      '@luxfheprotocol/contracts': ^0.3.0
       hardhat: ^2.11.0
 
-  fhenix-hardhat-plugin@0.3.2:
+  luxfhe-hardhat-plugin@0.3.2:
     resolution: {integrity: sha512-cH1rONJv8OKE+nKu/iViLyLsGHfAKuE1z+rMPFdPuDkFjzmeWEMF6qsQgjjrzrG9PuksRU3rAzuhsadCKp4Fmw==}
     peerDependencies:
       hardhat: ^2.11.0
 
-  fhenixjs@0.4.1:
+  luxfhejs@0.4.1:
     resolution: {integrity: sha512-q+IgMHFhTrXpsdrDox67Qw4InffCPYiNnXpn8cUThmfKMLGOhVzp4TgMc4xG5yajVroIw+Fle1C8SJILxG+BVQ==}
     engines: {node: '>=20.0.0'}
 
@@ -6578,7 +6578,7 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@fhenixprotocol/contracts@0.3.0-alpha.6':
+  '@luxfheprotocol/contracts@0.3.0-alpha.6':
     dependencies:
       '@openzeppelin/contracts': 5.1.0
 
@@ -10254,30 +10254,30 @@ snapshots:
     dependencies:
       pend: 1.2.0
 
-  fhenix-hardhat-docker@0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
+  luxfhe-hardhat-docker@0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
     dependencies:
       chalk: 4.1.2
       hardhat: 2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)
 
-  fhenix-hardhat-network@0.3.2(@fhenixprotocol/contracts@0.3.0-alpha.6)(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
+  luxfhe-hardhat-network@0.3.2(@luxfheprotocol/contracts@0.3.0-alpha.6)(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
     dependencies:
-      '@fhenixprotocol/contracts': 0.3.0-alpha.6
+      '@luxfheprotocol/contracts': 0.3.0-alpha.6
       chalk: 4.1.2
       hardhat: 2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)
 
-  fhenix-hardhat-plugin@0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
+  luxfhe-hardhat-plugin@0.3.2(hardhat@2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)):
     dependencies:
       axios: 1.7.7
       chalk: 4.1.2
       ethers: 6.11.1
-      fhenixjs: 0.4.1
+      luxfhejs: 0.4.1
       hardhat: 2.19.5(ts-node@10.9.2(@types/node@22.9.0)(typescript@5.1.6))(typescript@5.1.6)
     transitivePeerDependencies:
       - bufferutil
       - debug
       - utf-8-validate
 
-  fhenixjs@0.4.1:
+  luxfhejs@0.4.1:
     dependencies:
       '@types/node': 20.17.6
       tweetnacl: 1.0.3

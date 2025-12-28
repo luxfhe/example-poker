@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPublicClient, http } from "viem";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
 import { useFetchBlocks } from "~~/hooks/scaffold-eth";
 import { AddressCodeTab } from "./AddressCodeTab";
 import { AddressLogsTab } from "./AddressLogsTab";
@@ -21,7 +21,7 @@ type PageProps = {
 };
 
 const publicClient = createPublicClient({
-  chain: fhenixLocal,
+  chain: luxfheLocal,
   transport: http(),
 });
 

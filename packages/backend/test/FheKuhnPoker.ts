@@ -4,7 +4,7 @@ import hre from "hardhat";
 
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import {
-  createFhenixContractPermission,
+  createLuxFHEContractPermission,
   getTokensFromFaucet,
   revertSnapshot,
   takeSnapshot,
@@ -261,21 +261,21 @@ describe("FHEKuhnPoker", function () {
     const gid = await createGame();
 
     // Revert if invalid gid
-    let permission = await createFhenixContractPermission(hre, bob, fheKuhnPokerAddress);
+    let permission = await createLuxFHEContractPermission(hre, bob, fheKuhnPokerAddress);
     await expect(fheKuhnPoker.connect(bob).getGameCard(permission, gid + 1)).to.be.revertedWithCustomError(
       fheKuhnPoker,
       "InvalidGame",
     );
 
     // Revert if not player
-    permission = await createFhenixContractPermission(hre, signer, fheKuhnPokerAddress);
+    permission = await createLuxFHEContractPermission(hre, signer, fheKuhnPokerAddress);
     await expect(fheKuhnPoker.connect(signer).getGameCard(permission, gid)).to.be.revertedWithCustomError(
       fheKuhnPoker,
       "NotPlayerInGame",
     );
 
     // Revert if not sender
-    permission = await createFhenixContractPermission(hre, ada, fheKuhnPokerAddress);
+    permission = await createLuxFHEContractPermission(hre, ada, fheKuhnPokerAddress);
     await expect(fheKuhnPoker.connect(bob).getGameCard(permission, gid)).to.be.revertedWithCustomError(
       fheKuhnPoker,
       "SignerNotMessageSender",
@@ -285,11 +285,11 @@ describe("FHEKuhnPoker", function () {
   it("getGameCard should return sealed card", async () => {
     const gid = await createGame();
 
-    let permission = await createFhenixContractPermission(hre, bob, fheKuhnPokerAddress);
+    let permission = await createLuxFHEContractPermission(hre, bob, fheKuhnPokerAddress);
     const bobSealedCard = await fheKuhnPoker.connect(bob).getGameCard(permission, gid);
     const bobUnsealedCard = unsealMockFheOpsSealed(bobSealedCard.data);
 
-    permission = await createFhenixContractPermission(hre, ada, fheKuhnPokerAddress);
+    permission = await createLuxFHEContractPermission(hre, ada, fheKuhnPokerAddress);
     const adaSealedCard = await fheKuhnPoker.connect(ada).getGameCard(permission, gid);
     const adaUnsealedCard = unsealMockFheOpsSealed(adaSealedCard.data);
 

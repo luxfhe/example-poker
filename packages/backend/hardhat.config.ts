@@ -4,9 +4,9 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-verify";
 import "@typechain/hardhat";
 import { config as dotenvConfig } from "dotenv";
-import "fhenix-hardhat-docker";
-import "fhenix-hardhat-plugin";
-import "fhenix-hardhat-network";
+import "@luxfhe/hardhat-docker";
+import "@luxfhe/hardhat-plugin";
+import "@luxfhe/hardhat-network";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "hardhat-gas-reporter";
@@ -17,7 +17,7 @@ import "./tasks";
 dotenvConfig();
 
 const TESTNET_CHAIN_ID = 42069;
-const TESTNET_RPC_URL = "https://api.testnet.fhenix.zone:7747";
+const TESTNET_RPC_URL = "https://api.testnet.luxfhe.zone:7747";
 
 // @todo: Set proper type for the network config.
 const testnetConfig: any = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { playerActionNumToName } from "~~/components/fhenix/utils";
+import { playerActionNumToName } from "~~/components/luxfhe/utils";
 import { Fragment } from "react";
 import {
   PlayerActions,
@@ -10,7 +10,7 @@ import {
   PlayerIdentifier,
   PlayerSeat,
   RevealCardButton,
-} from "~~/components/fhenix/PlayerSeat";
+} from "~~/components/luxfhe/PlayerSeat";
 import {
   useChipJitters,
   useGamePlayerCardUpdater,
@@ -30,7 +30,7 @@ import {
   RematchButton,
   CancelSearchButton,
   DealMeInButton,
-} from "~~/components/fhenix/GameActionButtons";
+} from "~~/components/luxfhe/GameActionButtons";
 import { motion } from "framer-motion";
 
 const OpponentSeat = () => {
@@ -288,7 +288,7 @@ const ActionSection: React.FC = () => {
       {/* Not in a game */}
       {gameStep === "idle" && (
         <div className="flex flex-col justify-center items-center gap-4">
-          <span>Welcome to Kuhn Poker, powered by Fhenix!</span>
+          <span>Welcome to Kuhn Poker, powered by LuxFHE!</span>
           <div
             className={`flex flex-row gap-4 ${
               writeDisabled &&

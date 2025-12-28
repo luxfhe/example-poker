@@ -4,19 +4,19 @@ import { zeroAddress } from "viem";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
-import { useCreateFhenixPermit } from "~~/services/fhenix/store";
+import { useCreateLuxFHEPermit } from "~~/services/luxfhe/store";
 import { ellipseAddress, playerActionNumToName } from "./utils";
 import { tv } from "tailwind-variants";
 import { ActionOption, GameOutcome, KuhnCard, outcomeToText, PlayerAction } from "~~/services/store/game";
 import { PlayingCard } from "./PlayingCard";
 
 export const RevealCardButton = () => {
-  const createFhenixPermit = useCreateFhenixPermit();
+  const createLuxFHEPermit = useCreateLuxFHEPermit();
   const { address } = useAccount();
   const { data: deployedContractData } = useDeployedContractInfo("FHEKuhnPoker");
 
   return (
-    <button className="btn absolute" onClick={() => createFhenixPermit(deployedContractData?.address, address)}>
+    <button className="btn absolute" onClick={() => createLuxFHEPermit(deployedContractData?.address, address)}>
       <EyeIcon className="h-6 w-6" />
     </button>
   );

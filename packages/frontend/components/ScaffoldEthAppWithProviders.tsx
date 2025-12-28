@@ -13,12 +13,12 @@ import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
-import { useWagmiInitFhenixClient } from "~~/services/fhenix/store";
+import { useWagmiInitLuxFHEClient } from "~~/services/luxfhe/store";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
-  useWagmiInitFhenixClient();
+  useWagmiInitLuxFHEClient();
 
   useEffect(() => {
     if (price > 0) {

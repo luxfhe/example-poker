@@ -4,12 +4,12 @@ import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { createWalletClient, http } from "viem";
 import { useAccount, useNetwork } from "wagmi";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
-import { useLocalFhenixFaucet } from "~~/hooks/fhenix/useLocalFhenixFaucet";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
+import { useLocalLuxFHEFaucet } from "~~/hooks/luxfhe/useLocalLuxFHEFaucet";
 import { useAccountBalance } from "~~/hooks/scaffold-eth";
 
 const localWalletClient = createWalletClient({
-  chain: fhenixLocal,
+  chain: luxfheLocal,
   transport: http(),
 });
 
@@ -23,7 +23,7 @@ export const FaucetButton = () => {
   const { chain: ConnectedChain } = useNetwork();
 
   const [loading, setLoading] = useState(false);
-  const faucetRequest = useLocalFhenixFaucet(localWalletClient);
+  const faucetRequest = useLocalLuxFHEFaucet(localWalletClient);
 
   const sendETH = async () => {
     if (!address) {
@@ -41,7 +41,7 @@ export const FaucetButton = () => {
   };
 
   // Render only on local chain
-  if (ConnectedChain?.id !== fhenixLocal.id) {
+  if (ConnectedChain?.id !== luxfheLocal.id) {
     return null;
   }
 

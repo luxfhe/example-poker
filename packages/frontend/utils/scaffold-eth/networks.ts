@@ -1,5 +1,5 @@
 import * as chains from "viem/chains";
-import { fhenixFrontier, fhenixLocal } from "~~/config/fhenixNetworks";
+import { luxfheFrontier, luxfheLocal } from "~~/config/luxfheNetworks";
 import scaffoldConfig from "~~/scaffold.config";
 
 type ChainAttributes = {
@@ -57,10 +57,10 @@ export const NETWORKS_EXTRA_DATA: Record<string, ChainAttributes> = {
   // [chains.scrollSepolia.id]: {
   //   color: "#fbebd4",
   // },
-  [fhenixFrontier.id]: {
+  [luxfheFrontier.id]: {
     color: "#32373c",
   },
-  [fhenixLocal.id]: {
+  [luxfheLocal.id]: {
     color: "#32373c",
   },
 };

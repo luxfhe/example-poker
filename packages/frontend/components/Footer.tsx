@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Faucet } from "./scaffold-eth";
 
@@ -11,7 +11,7 @@ import { Faucet } from "./scaffold-eth";
 export const Footer = () => {
   // const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrencyPrice);
   const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === fhenixLocal.id;
+  const isLocalNetwork = targetNetwork.id === luxfheLocal.id;
 
   return (
     <div className="min-h-0 px-1">
@@ -54,14 +54,14 @@ export const Footer = () => {
                 <span className="link">BuidlGuidl</span>
               </a>
               and
-              <a href="https://github.com/kkomelin/create-fhenix-dapp" target="_blank" rel="noreferrer">
-                <span className="link">Create Fhenix DApp</span>
+              <a href="https://github.com/kkomelin/create-luxfhe-dapp" target="_blank" rel="noreferrer">
+                <span className="link">Create LuxFHE DApp</span>
               </a>
             </div>
             <span>·</span>
             <div className="text-center">
               <a
-                href="https://github.com/kkomelin/create-fhenix-dapp/issues"
+                href="https://github.com/kkomelin/create-luxfhe-dapp/issues"
                 target="_blank"
                 rel="noreferrer"
                 className="link"

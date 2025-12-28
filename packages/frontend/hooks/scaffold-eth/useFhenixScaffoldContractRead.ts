@@ -1,16 +1,16 @@
 import type { ExtractAbiFunctionNames } from "abitype";
 import { useAccount, useContractRead } from "wagmi";
 import { useDeployedContractInfo, useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import { useFhenixClient, useFhenixPermit } from "~~/services/fhenix/store";
+import { useLuxFHEClient, useLuxFHEPermit } from "~~/services/LuxFHE/store";
 import {
   AbiFunctionReturnType,
   ContractAbi,
   ContractName,
-  UseFhenixScaffoldReadConfig,
+  UseLuxFHEScaffoldReadConfig,
   UseScaffoldReadConfig,
 } from "~~/utils/scaffold-eth/contract";
-import { unsealFhenixSealedItems } from "~~/utils/fhenixUtils";
-import { InjectFhenixPermission } from "~~/utils/fhenixUtilsTypes";
+import { unsealLuxFHESealedItems } from "~~/utils/LuxFHEUtils";
+import { InjectLuxFHEPermission } from "~~/utils/LuxFHEUtilsTypes";
 
 /**
  * Wrapper around wagmi's useContractRead hook which automatically loads (by name) the contract ABI and address from
@@ -20,23 +20,23 @@ import { InjectFhenixPermission } from "~~/utils/fhenixUtilsTypes";
  * @param config.functionName - name of the function to be called
  * @param config.args - args to be passed to the function call
  */
-export const useFhenixScaffoldContractRead = <
+export const useLuxFHEScaffoldContractRead = <
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "pure" | "view">,
 >(
-  config: UseFhenixScaffoldReadConfig<TContractName, TFunctionName>,
+  config: UseLuxFHEScaffoldReadConfig<TContractName, TFunctionName>,
 ) => {
-  const fhenixClient = useFhenixClient();
+  const LuxFHEClient = useLuxFHEClient();
   const { data: deployedContract } = useDeployedContractInfo(config.contractName);
   const { address } = useAccount();
-  const { permission } = useFhenixPermit(deployedContract?.address, address);
+  const { permission } = useLuxFHEPermit(deployedContract?.address, address);
 
   const injectedConfig = {
     ...config,
     args:
       config.args == null
         ? undefined
-        : (config.args as any[]).map(arg => (arg === InjectFhenixPermission ? permission : arg)),
+        : (config.args as any[]).map(arg => (arg === InjectLuxFHEPermission ? permission : arg)),
     account: address,
   } as UseScaffoldReadConfig<TContractName, TFunctionName>;
 
@@ -44,18 +44,18 @@ export const useFhenixScaffoldContractRead = <
 
   // // Unseal any sealed output types in the result data
   const unsealedData =
-    deployedContract?.address == null || address == null || fhenixClient == null
+    deployedContract?.address == null || address == null || LuxFHEClient == null
       ? undefined
-      : unsealFhenixSealedItems(data, deployedContract?.address, address, fhenixClient);
+      : unsealLuxFHESealedItems(data, deployedContract?.address, address, LuxFHEClient);
 
   return {
     data: unsealedData,
     ...rest,
   } as Omit<ReturnType<typeof useContractRead>, "data" | "refetch"> & {
-    data: AbiFunctionReturnType<ContractAbi, TFunctionName, "fhenix-utils-modified"> | undefined;
+    data: AbiFunctionReturnType<ContractAbi, TFunctionName, "LuxFHE-utils-modified"> | undefined;
     refetch: (options?: {
       throwOnError: boolean;
       cancelRefetch: boolean;
-    }) => Promise<AbiFunctionReturnType<ContractAbi, TFunctionName, "fhenix-utils-modified">>;
+    }) => Promise<AbiFunctionReturnType<ContractAbi, TFunctionName, "LuxFHE-utils-modified">>;
   };
 };

@@ -9,12 +9,12 @@ import {
 } from "../test/kuhnPokerUtils";
 
 task("task:kuhnPokerRandomness").setAction(async function (_taskArguments: TaskArguments, hre) {
-  const { fhenixjs, ethers, deployments } = hre;
+  const { LuxFHEjs, ethers, deployments } = hre;
   const [signer, bob, ada] = await ethers.getSigners();
 
   const getTokensFromFaucet = async (address: string) => {
     if ((await hre.ethers.provider.getBalance(address)).toString() === "0") {
-      await hre.fhenixjs.getFunds(address);
+      await hre.LuxFHEjs.getFunds(address);
     }
   };
 

@@ -8,27 +8,27 @@ import {
   type EncryptedUint256,
   type EncryptedAddress,
   Permission,
-  FhenixClientSync,
+  LuxFHEClientSync,
   EncryptedNumber,
-} from "fhenixjs";
+} from "luxfhejs";
 import { Primitive } from "type-fest";
 
 // Permission
 
-export interface DFhenixPermission extends Permission {
-  type: "fhenix-permission";
+export interface DLuxFHEPermission extends Permission {
+  type: "luxfhe-permission";
 }
 
 /**
- * Used as a placeholder to be replaced with a Fhenix `Permission` signed object.
+ * Used as a placeholder to be replaced with a LuxFHE `Permission` signed object.
  *
- * _For use with utility fhenix call hooks (eg. useFhenixScaffoldContractWrite)._
+ * _For use with utility luxfhe call hooks (eg. useLuxFHEScaffoldContractWrite)._
  */
-export const InjectFhenixPermission = "inject-fhenix-permission" as const;
+export const InjectLuxFHEPermission = "inject-luxfhe-permission" as const;
 
-type FhenixPermissionTypeMap<E extends FhenixUtilsTypeModificationOption = "raw"> = E extends "raw"
+type LuxFHEPermissionTypeMap<E extends LuxFHEUtilsTypeModificationOption = "raw"> = E extends "raw"
   ? Permission
-  : typeof InjectFhenixPermission;
+  : typeof InjectLuxFHEPermission;
 
 // Encryptable Primitives
 
@@ -43,12 +43,12 @@ export const EncryptablePrimitive = {
   Bool: "bool",
 } as const;
 
-export type EncryptFunction<T extends EncryptedNumber> = <C extends FhenixClientSync | undefined>(
-  fhenixClient: C,
+export type EncryptFunction<T extends EncryptedNumber> = <C extends LuxFHEClientSync | undefined>(
+  luxfheClient: C,
 ) => C extends undefined ? undefined : T;
 
 export type EncryptableBase = {
-  readonly type: "fhenix-encryptable-input-primitive";
+  readonly type: "luxfhe-encryptable-input-primitive";
   securityZone?: number;
 };
 
@@ -57,8 +57,8 @@ export type EncryptableBool = EncryptableBase & {
   value: boolean;
   /**
    * Encrypt this **SealableBool** into an **EncryptedBool (inEbool)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedBool (FHE.sol :: inEbool)**
    */
   encrypt: EncryptFunction<EncryptedBool>;
@@ -69,8 +69,8 @@ export type EncryptableUint8 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint8** into an **EncryptedUint8 (inEuint8)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint8 (FHE.sol :: inEuint8)**
    */
   encrypt: EncryptFunction<EncryptedUint8>;
@@ -81,8 +81,8 @@ export type EncryptableUint16 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint16** into an **EncryptedUint16 (inEuint16)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint16 (FHE.sol :: inEuint16)**
    */
   encrypt: EncryptFunction<EncryptedUint16>;
@@ -93,8 +93,8 @@ export type EncryptableUint32 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint32** into an **EncryptedUint32 (inEuint32)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint32 (FHE.sol :: inEuint32)**
    */
   encrypt: EncryptFunction<EncryptedUint32>;
@@ -105,8 +105,8 @@ export type EncryptableUint64 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint64** into an **EncryptedUint64 (inEuint64)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint64 (FHE.sol :: inEuint64)**
    */
   encrypt: EncryptFunction<EncryptedUint64>;
@@ -117,8 +117,8 @@ export type EncryptableUint128 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint128** into an **EncryptedUint128 (inEuint128)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint128 (FHE.sol :: inEuint128)**
    */
   encrypt: EncryptFunction<EncryptedUint128>;
@@ -129,8 +129,8 @@ export type EncryptableUint256 = EncryptableBase & {
   value: bigint | number | string;
   /**
    * Encrypt this **SealableUint256** into an **EncryptedUint256 (inEuint32)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedUint256 (FHE.sol :: inEuint32)**
    */
   encrypt: EncryptFunction<EncryptedUint256>;
@@ -141,8 +141,8 @@ export type EncryptableAddress = EncryptableBase & {
   value: `0x${string}`;
   /**
    * Encrypt this **SealableAddress** into an **EncryptedAddress (inAddress)**
-   * to be passed securely into Fhenix FHE powered contracts.
-   * @param {FhenixClientSync | undefined } fhenixClient - Client performing the encryption
+   * to be passed securely into LuxFHE FHE powered contracts.
+   * @param {LuxFHEClientSync | undefined } luxfheClient - Client performing the encryption
    * @returns **EncryptedAddress (FHE.sol :: inAddress)**
    */
   encrypt: EncryptFunction<EncryptedAddress>;
@@ -219,9 +219,9 @@ export interface DEncryptedInputTypes {
   [EncryptablePrimitive.Address]: DEncryptedAddress;
 }
 
-export type FhenixUtilsTypeModificationOption = "raw" | "fhenix-utils-modified";
+export type LuxFHEUtilsTypeModificationOption = "raw" | "luxfhe-utils-modified";
 
-type EncryptableInputTypeMap<E extends FhenixUtilsTypeModificationOption = "raw"> = {
+type EncryptableInputTypeMap<E extends LuxFHEUtilsTypeModificationOption = "raw"> = {
   [EncryptablePrimitive.Bool]: E extends "raw" ? EncryptedBool : EncryptableBool;
   [EncryptablePrimitive.Uint8]: E extends "raw" ? EncryptedUint8 : EncryptableUint8;
   [EncryptablePrimitive.Uint16]: E extends "raw" ? EncryptedUint16 : EncryptableUint16;
@@ -232,14 +232,14 @@ type EncryptableInputTypeMap<E extends FhenixUtilsTypeModificationOption = "raw"
   [EncryptablePrimitive.Address]: E extends "raw" ? EncryptedAddress : EncryptableAddress;
 };
 
-type FhenixMappedInputType<T, E extends FhenixUtilsTypeModificationOption = "raw"> = T extends DFhenixPermission
-  ? FhenixPermissionTypeMap<E>
+type LuxFHEMappedInputType<T, E extends LuxFHEUtilsTypeModificationOption = "raw"> = T extends DLuxFHEPermission
+  ? LuxFHEPermissionTypeMap<E>
   : T extends DEncryptedItem
   ? EncryptableInputTypeMap<E>[T["type"]]
-  : FhenixMappedInputTypes<T, E>;
+  : LuxFHEMappedInputTypes<T, E>;
 
-export type FhenixMappedInputTypes<T, E extends FhenixUtilsTypeModificationOption = "raw"> = {
-  [K in keyof T]: FhenixMappedInputType<T[K], E>;
+export type LuxFHEMappedInputTypes<T, E extends LuxFHEUtilsTypeModificationOption = "raw"> = {
+  [K in keyof T]: LuxFHEMappedInputType<T[K], E>;
 };
 
 // Discriminated Sealed Values
@@ -280,7 +280,7 @@ interface SealedOutputAddress {
 }
 interface DSealedOutputBase {
   data: string;
-  type: "fhenix-sealed-output";
+  type: "luxfhe-sealed-output";
 }
 export type DSealedOutputBool = SealedOutputBool & DSealedOutputBase;
 export type DSealedOutputUint = SealedOutputUint & DSealedOutputBase;
@@ -296,9 +296,9 @@ export interface DSealedOutputTypes {
 
 type AbiOutputPrimitive = string | number | bigint | boolean | undefined;
 
-export type FhenixMappedOutputTypes<
+export type LuxFHEMappedOutputTypes<
   T,
-  E extends FhenixUtilsTypeModificationOption = "raw",
+  E extends LuxFHEUtilsTypeModificationOption = "raw",
 > = T extends AbiOutputPrimitive
   ? T
   : T extends DSealedOutputBool
@@ -314,5 +314,5 @@ export type FhenixMappedOutputTypes<
     ? SealedOutputAddress
     : `0x${string}`
   : {
-      [K in keyof T]: FhenixMappedOutputTypes<T[K], E>;
+      [K in keyof T]: LuxFHEMappedOutputTypes<T[K], E>;
     };

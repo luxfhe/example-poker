@@ -12,7 +12,7 @@ import type { NonPayableOverrides } from "../../../../../../common";
 import type {
   Precompiles,
   PrecompilesInterface,
-} from "../../../../../../@fhenixprotocol/contracts/utils/debug/MockFheOps.sol/Precompiles";
+} from "../../../../../../@luxfhe/contracts/utils/debug/MockFheOps.sol/Precompiles";
 
 const _abi = [
   {

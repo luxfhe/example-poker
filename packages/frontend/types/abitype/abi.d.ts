@@ -1,4 +1,4 @@
-import { DEncryptedInputTypes, DSealedOutputTypes, DFhenixPermission } from "~~/utils/fhenixUtilsTypes";
+import { DEncryptedInputTypes, DSealedOutputTypes, DLuxFHEPermission } from "~~/utils/luxfheUtilsTypes";
 
 type EBool = bigint & {
   type: "fhe-encrypted-bool";
@@ -37,7 +37,7 @@ declare module "abitype" {
       inEuint256: DEncryptedInputTypes["uint256"];
       inAddress: DEncryptedInputTypes["address"];
 
-      Permission: DFhenixPermission;
+      Permission: DLuxFHEPermission;
 
       SealedBool: DSealedOutputTypes["bool"];
       SealedUint: DSealedOutputTypes["uint"];

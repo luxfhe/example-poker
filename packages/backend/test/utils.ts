@@ -1,12 +1,12 @@
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { Permission } from "fhenixjs";
+import { Permission } from "luxfhejs";
 import hre, { ethers, network } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 export const getTokensFromFaucet = async (address: string) => {
-  if (hre.network.name === "localfhenix") {
+  if (hre.network.name === "localluxfhe") {
     if ((await hre.ethers.provider.getBalance(address)).toString() === "0") {
-      await hre.fhenixjs.getFunds(address);
+      await hre.luxfhejs.getFunds(address);
     }
   }
 };
@@ -29,15 +29,15 @@ export const withinSnapshot = async <T>(body: () => Promise<T>): Promise<T | und
   }
 };
 
-export const createFhenixContractPermission = async (
+export const createLuxFHEContractPermission = async (
   hre: HardhatRuntimeEnvironment,
   signer: SignerWithAddress,
   contractAddress: string,
 ): Promise<Permission> => {
   const provider = ethers.provider;
 
-  const permit = await hre.fhenixjs.generatePermit(contractAddress, provider, signer);
-  const permission = hre.fhenixjs.extractPermitPermission(permit);
+  const permit = await hre.luxfhejs.generatePermit(contractAddress, provider, signer);
+  const permission = hre.luxfhejs.extractPermitPermission(permit);
 
   return permission;
 };

@@ -6,12 +6,12 @@ import { notification } from "~~/utils/scaffold-eth";
 import {
   ContractAbi,
   ContractName,
-  UseFhenixScaffoldWriteConfig,
+  UseLuxFHEScaffoldWriteConfig,
   UseScaffoldWriteConfig,
 } from "~~/utils/scaffold-eth/contract";
 import { useTargetNetwork } from "./useTargetNetwork";
-import { Encryptable } from "~~/utils/fhenixUtils";
-import { useFhenixClient } from "~~/services/fhenix/store";
+import { Encryptable } from "~~/utils/luxfheUtils";
+import { useLuxFHEClient } from "~~/services/luxfhe/store";
 
 type UpdatedArgs = Parameters<ReturnType<typeof useContractWrite<Abi, string, undefined>>["writeAsync"]>[0];
 
@@ -26,7 +26,7 @@ type UpdatedArgs = Parameters<ReturnType<typeof useContractWrite<Abi, string, un
  * @param config.blockConfirmations - number of block confirmations to wait for (default: 1)
  * @param config.onBlockConfirmation - callback that will be called after blockConfirmations.
  */
-export const useFhenixScaffoldContractWrite = <
+export const useLuxFHEScaffoldContractWrite = <
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">,
 >({
@@ -37,13 +37,13 @@ export const useFhenixScaffoldContractWrite = <
   onBlockConfirmation,
   blockConfirmations,
   ...writeConfig
-}: UseFhenixScaffoldWriteConfig<TContractName, TFunctionName>) => {
+}: UseLuxFHEScaffoldWriteConfig<TContractName, TFunctionName>) => {
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
   const { chain } = useNetwork();
   const writeTx = useTransactor();
   const [isMining, setIsMining] = useState(false);
   const { targetNetwork } = useTargetNetwork();
-  const fhenixClient = useFhenixClient();
+  const luxfheClient = useLuxFHEClient();
 
   const wagmiContractWrite = useContractWrite({
     chainId: targetNetwork.id,
@@ -60,8 +60,8 @@ export const useFhenixScaffoldContractWrite = <
     value: newValue,
     ...otherConfig
   }: {
-    args?: UseFhenixScaffoldWriteConfig<TContractName, TFunctionName>["args"];
-    value?: UseFhenixScaffoldWriteConfig<TContractName, TFunctionName>["value"];
+    args?: UseLuxFHEScaffoldWriteConfig<TContractName, TFunctionName>["args"];
+    value?: UseLuxFHEScaffoldWriteConfig<TContractName, TFunctionName>["value"];
   } & UpdatedArgs = {}) => {
     if (!deployedContractData) {
       notification.error("Target Contract is not deployed, did you forget to run `yarn deploy`?");
@@ -75,8 +75,8 @@ export const useFhenixScaffoldContractWrite = <
       notification.error("You are on the wrong network");
       return;
     }
-    if (!fhenixClient) {
-      notification.error("Fhenixjs Client not initialized");
+    if (!luxfheClient) {
+      notification.error("LuxFHEjs Client not initialized");
       return;
     }
 
@@ -93,7 +93,7 @@ export const useFhenixScaffoldContractWrite = <
     const unsealedArgs = newArgs ?? args;
     let sealedArgs: UseScaffoldWriteConfig<TContractName, TFunctionName>["args"] | undefined = undefined;
     if (unsealedArgs != null) {
-      sealedArgs = Encryptable.encrypt(unsealedArgs, fhenixClient) as UseScaffoldWriteConfig<
+      sealedArgs = Encryptable.encrypt(unsealedArgs, luxfheClient) as UseScaffoldWriteConfig<
         TContractName,
         TFunctionName
       >["args"];

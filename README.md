@@ -1,11 +1,11 @@
-# 🏗 FHENIX KUHN POKER
+# 🏗 luxfhe KUHN POKER
 
-Fhenix Kuhn Poker is a POC demonstrating on-chain randomness using Fhenix's new `random` functionality.
+LuxFHE Kuhn Poker is a POC demonstrating on-chain randomness using LuxFHE's new `random` functionality.
 
-This dApp is currently in a WIP state, and will be released in full after the deployment of the Fhenix Nitrogen testnet, which introduces the randomness functionality.
+This dApp is currently in a WIP state, and will be released in full after the deployment of the LuxFHE Nitrogen testnet, which introduces the randomness functionality.
 
-Additionally, this repo includes utilities for interacting with the fhenix blockchain,
-such as `useFhenixScaffoldContractRead` which automatically injects Fhenix permissions into read calls and decrypts sealed outputs, and `useFhenixScaffoldContractWrite` which automatically encrypts input variables before they are sent to the chain to be consumed as `inEuint` varieties.
+Additionally, this repo includes utilities for interacting with the luxfhe blockchain,
+such as `useLuxFHEScaffoldContractRead` which automatically injects LuxFHE permissions into read calls and decrypts sealed outputs, and `useLuxFHEScaffoldContractWrite` which automatically encrypts input variables before they are sent to the chain to be consumed as `inEuint` varieties.
 
 Video demonstration of FHE kuhn poker:
 

@@ -12,7 +12,7 @@ import type { NonPayableOverrides } from "../../../../common";
 import type {
   Precompiles,
   PrecompilesInterface,
-} from "../../../../@fhenixprotocol/contracts/FheOS.sol/Precompiles";
+} from "../../../../@luxfhe/contracts/FheOS.sol/Precompiles";
 
 const _abi = [
   {

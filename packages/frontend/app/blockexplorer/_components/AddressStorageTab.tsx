@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Address, createPublicClient, http, toHex } from "viem";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
 
 const publicClient = createPublicClient({
-  chain: fhenixLocal,
+  chain: luxfheLocal,
   transport: http(),
 });
 

@@ -1,4 +1,4 @@
-import { EncryptedNumber, FhenixClientSync } from "fhenixjs";
+import { EncryptedNumber, LuxFHEClientSync } from "luxfhejs";
 import {
   EncryptablePrimitive,
   EncryptableBool,
@@ -15,8 +15,8 @@ import {
   DSealedOutputBool,
   DSealedOutputUint,
   DSealedOutputAddress,
-  FhenixMappedOutputTypes,
-} from "./fhenixUtilsTypes";
+  LuxFHEMappedOutputTypes,
+} from "./luxfheUtilsTypes";
 import { toHex } from "viem";
 
 function hexlifyData<T extends EncryptedNumber>(t: T): T {
@@ -30,7 +30,7 @@ function isEncryptablePrimitive(item: unknown): item is EncryptableItem {
   if (typeof item === "object" && item !== null) {
     const obj = item as Record<string, unknown>;
     return (
-      obj.type === "fhenix-encryptable-input-primitive" &&
+      obj.type === "luxfhe-encryptable-input-primitive" &&
       (typeof obj.securityZone === "undefined" || typeof obj.securityZone === "number")
     );
   }
@@ -38,7 +38,7 @@ function isEncryptablePrimitive(item: unknown): item is EncryptableItem {
 }
 
 /**
- * Encrypting option for any data type *(including nested data structures)*. Any EncryptableItems will be encrypted into the Fhenix FHE ready form.
+ * Encrypting option for any data type *(including nested data structures)*. Any EncryptableItems will be encrypted into the LuxFHE FHE ready form.
  *
  * ```
  * encrypt([EncryptableUint8, number, { a: EncryptableBool, b: string }]);
@@ -49,27 +49,27 @@ function isEncryptablePrimitive(item: unknown): item is EncryptableItem {
  * ```
  *
  * @param item - Item to be encrypted, nested datatypes will be traversed and children encrypted.
- * @param fhenixClient
+ * @param luxfheClient
  * @returns - Item with self and children encrypted
  */
-function encrypt<T>(item: T, fhenixClient: FhenixClientSync | undefined): EncryptedItem<T> | undefined {
-  if (fhenixClient == null) return undefined;
+function encrypt<T>(item: T, luxfheClient: LuxFHEClientSync | undefined): EncryptedItem<T> | undefined {
+  if (luxfheClient == null) return undefined;
 
   // Check if the item is a EncryptableBase and return 'encrypted'
   if (isEncryptablePrimitive(item)) {
-    return item.encrypt(fhenixClient) as EncryptedItem<T>;
+    return item.encrypt(luxfheClient) as EncryptedItem<T>;
   }
 
   // If the item is an array, recursively process each element
   if (Array.isArray(item)) {
-    return item.map(nestedItem => encrypt(nestedItem, fhenixClient)) as EncryptedItem<T>;
+    return item.map(nestedItem => encrypt(nestedItem, luxfheClient)) as EncryptedItem<T>;
   }
 
   // If the item is an object, recursively process each property
   if (typeof item === "object" && item !== null) {
     const result: Record<string, unknown> = {};
     for (const [key, nestedItem] of Object.entries(item)) {
-      result[key] = encrypt(nestedItem, fhenixClient);
+      result[key] = encrypt(nestedItem, luxfheClient);
     }
     return result as EncryptedItem<T>;
   }
@@ -83,14 +83,14 @@ function encrypt<T>(item: T, fhenixClient: FhenixClientSync | undefined): Encryp
  */
 const createEncryptableBool = (value: boolean, securityZone = 0): EncryptableBool => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Bool,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_bool(this.value));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_bool(this.value));
     },
   };
 };
@@ -100,14 +100,14 @@ const createEncryptableBool = (value: boolean, securityZone = 0): EncryptableBoo
  */
 const createEncryptableUint8 = (value: bigint | number | string, securityZone = 0): EncryptableUint8 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint8,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint8(Number(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint8(Number(this.value)));
     },
   };
 };
@@ -117,14 +117,14 @@ const createEncryptableUint8 = (value: bigint | number | string, securityZone = 
  */
 const createEncryptableUint16 = (value: bigint | number | string, securityZone = 0): EncryptableUint16 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint16,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint16(Number(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint16(Number(this.value)));
     },
   };
 };
@@ -134,14 +134,14 @@ const createEncryptableUint16 = (value: bigint | number | string, securityZone =
  */
 const createEncryptableUint32 = (value: bigint | number | string, securityZone = 0): EncryptableUint32 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint32,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint32(Number(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint32(Number(this.value)));
     },
   };
 };
@@ -151,14 +151,14 @@ const createEncryptableUint32 = (value: bigint | number | string, securityZone =
  */
 const createEncryptableUint64 = (value: bigint | number | string, securityZone = 0): EncryptableUint64 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint64,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint64(BigInt(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint64(BigInt(this.value)));
     },
   };
 };
@@ -168,14 +168,14 @@ const createEncryptableUint64 = (value: bigint | number | string, securityZone =
  */
 const createEncryptableUint128 = (value: bigint | number | string, securityZone = 0): EncryptableUint128 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint128,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint128(BigInt(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint128(BigInt(this.value)));
     },
   };
 };
@@ -185,14 +185,14 @@ const createEncryptableUint128 = (value: bigint | number | string, securityZone 
  */
 const createEncryptableUint256 = (value: bigint | number | string, securityZone = 0): EncryptableUint256 => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Uint256,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_uint256(BigInt(this.value)));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint256(BigInt(this.value)));
     },
   };
 };
@@ -202,20 +202,20 @@ const createEncryptableUint256 = (value: bigint | number | string, securityZone 
  */
 const createEncryptableAddress = (value: `0x${string}`, securityZone = 0): EncryptableAddress => {
   return {
-    type: "fhenix-encryptable-input-primitive",
+    type: "luxfhe-encryptable-input-primitive",
     securityZone,
     subtype: EncryptablePrimitive.Address,
     value,
     // @ts-expect-error Discriminating not working well
-    encrypt: function (fhenixClient) {
-      if (fhenixClient == null) return undefined;
-      return hexlifyData(fhenixClient.encrypt_address(this.value));
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_address(this.value));
     },
   };
 };
 
 /**
- * **Convenience functions for creating and encrypting values to be passed to Fhenix FHE powered smart contracts.**
+ * **Convenience functions for creating and encrypting values to be passed to LuxFHE FHE powered smart contracts.**
  *
  * Usage:
  *
@@ -238,43 +238,43 @@ export const Encryptable = {
   encrypt,
 };
 
-// const fhenixClient = {} as any;
+// const luxfheClient = {} as any;
 
 // const encryptableUint8Narrowed = createEncryptableUint8<string>("5");
-// const encryptedUint8Narrowed = encryptEncryptable(encryptableUint8Narrowed, fhenixClient);
+// const encryptedUint8Narrowed = encryptEncryptable(encryptableUint8Narrowed, luxfheClient);
 
 // const encryptableUint8 = createEncryptableUint8("5");
-// const encryptedUint8 = encryptEncryptable(encryptableUint8, fhenixClient);
+// const encryptedUint8 = encryptEncryptable(encryptableUint8, luxfheClient);
 
 // const encryptableBool = createEncryptableBool(false);
-// const encryptedBool = encryptEncryptable(encryptableBool, fhenixClient);
+// const encryptedBool = encryptEncryptable(encryptableBool, luxfheClient);
 
 // const encryptableObject = createEncryptableObject({ a: 5, b: createEncryptableUint8(5n) });
-// const encryptedObject = encryptEncryptable(encryptableObject, fhenixClient);
+// const encryptedObject = encryptEncryptable(encryptableObject, luxfheClient);
 
 // const encryptableObjectInObject = createEncryptableObject({
 //   a: 5,
 //   b: createEncryptableUint8(5n),
 //   c: createEncryptableObject({ a: "hello", b: createEncryptableBool(false) }),
 // });
-// const encryptedObjectInObject = encryptEncryptable(encryptableObjectInObject, fhenixClient);
+// const encryptedObjectInObject = encryptEncryptable(encryptableObjectInObject, luxfheClient);
 
 // const encryptableArray = createEncryptableArray([5, createEncryptableUint8(5n)]);
-// const encryptedArray = encryptEncryptable(encryptableArray, fhenixClient);
+// const encryptedArray = encryptEncryptable(encryptableArray, luxfheClient);
 
 // const encryptableArrayInArray = createEncryptableArray([
 //   5,
 //   createEncryptableUint8(5n),
 //   createEncryptableArray(["hello", createEncryptableBool(false)]),
 // ]);
-// const encryptedArrayInArray = encryptEncryptable(encryptableArrayInArray, fhenixClient);
+// const encryptedArrayInArray = encryptEncryptable(encryptableArrayInArray, luxfheClient);
 
 // const encryptableArrayInObject = createEncryptableObject({
 //   a: 5,
 //   b: createEncryptableUint8(5n),
 //   c: createEncryptableArray(["hello", createEncryptableBool(false)]),
 // });
-// const encryptedArrayInObject = encryptEncryptable(encryptableArrayInObject, fhenixClient);
+// const encryptedArrayInObject = encryptEncryptable(encryptableArrayInObject, luxfheClient);
 
 // const encryptableObjectInArray = Encryptable.array([
 //   5,
@@ -300,7 +300,7 @@ export const Encryptable = {
 
 */
 
-// const encryptedObjectInArray = await Encryptable.encrypt(encryptableObjectInArray, fhenixClient);
+// const encryptedObjectInArray = await Encryptable.encrypt(encryptableObjectInArray, luxfheClient);
 
 /*
 
@@ -318,66 +318,66 @@ export const Encryptable = {
 
 // UNSEALABLE
 
-const isFhenixSealedAddress = (item: any): item is DSealedOutputAddress => {
+const isLuxFHESealedAddress = (item: any): item is DSealedOutputAddress => {
   return item && typeof item === "object" && item.utype === TFHE_UTYPE.EADDRESS;
 };
 
-const isFhenixSealedBool = (item: any): item is DSealedOutputBool => {
+const isLuxFHESealedBool = (item: any): item is DSealedOutputBool => {
   return item && typeof item === "object" && item.utype === TFHE_UTYPE.EBOOL;
 };
 
-const isFhenixSealedUint = (item: any): item is DSealedOutputUint => {
+const isLuxFHESealedUint = (item: any): item is DSealedOutputUint => {
   return item && typeof item === "object" && TFHE_UTYPE.EUINT.includes(item.utype);
 };
 
 const sealedBoolItem = {
   data: "0x000",
   utype: 12,
-  type: "fhenix-sealed-output",
+  type: "luxfhe-sealed-output",
 } as DSealedOutputAddress;
 
-const test = unsealFhenixSealedItems([sealedBoolItem, sealedBoolItem], "0x...", "0x...", {} as FhenixClientSync);
+const test = unsealLuxFHESealedItems([sealedBoolItem, sealedBoolItem], "0x...", "0x...", {} as LuxFHEClientSync);
 
-export function unsealFhenixSealedItems<T extends any[]>(
+export function unsealLuxFHESealedItems<T extends any[]>(
   item: [...T],
   contractAddress: `0x${string}`,
   account: `0x${string}`,
-  fhenixClient: FhenixClientSync,
-): [...FhenixMappedOutputTypes<T, "fhenix-utils-modified">];
-export function unsealFhenixSealedItems<T>(
+  luxfheClient: LuxFHEClientSync,
+): [...LuxFHEMappedOutputTypes<T, "luxfhe-utils-modified">];
+export function unsealLuxFHESealedItems<T>(
   item: T,
   contractAddress: `0x${string}`,
   account: `0x${string}`,
-  fhenixClient: FhenixClientSync,
-): FhenixMappedOutputTypes<T, "fhenix-utils-modified">;
-export function unsealFhenixSealedItems<T>(
+  luxfheClient: LuxFHEClientSync,
+): LuxFHEMappedOutputTypes<T, "luxfhe-utils-modified">;
+export function unsealLuxFHESealedItems<T>(
   item: T,
   contractAddress: `0x${string}`,
   account: `0x${string}`,
-  fhenixClient: FhenixClientSync,
+  luxfheClient: LuxFHEClientSync,
 ) {
-  if (isFhenixSealedAddress(item)) {
-    // return fhenixClient.unseal(contractAddress, item.data, account)
+  if (isLuxFHESealedAddress(item)) {
+    // return luxfheClient.unseal(contractAddress, item.data, account)
     return `0xFILL_ME_OUT_IN_UNSEAL_ITEM` as string;
   }
-  if (isFhenixSealedUint(item)) {
-    return fhenixClient.unseal(contractAddress, item.data, account);
+  if (isLuxFHESealedUint(item)) {
+    return luxfheClient.unseal(contractAddress, item.data, account);
   }
-  if (isFhenixSealedBool(item)) {
-    const unsealed = fhenixClient.unseal(contractAddress, item.data, account);
+  if (isLuxFHESealedBool(item)) {
+    const unsealed = luxfheClient.unseal(contractAddress, item.data, account);
     return unsealed === 1n;
   }
 
   if (typeof item === "object" && item !== null) {
     // Handle array
     if (Array.isArray(item)) {
-      return item.map(nestedItem => unsealFhenixSealedItems(nestedItem, contractAddress, account, fhenixClient));
+      return item.map(nestedItem => unsealLuxFHESealedItems(nestedItem, contractAddress, account, luxfheClient));
     } else {
       // Handle object
       const result: any = {};
       for (const key in item) {
         if (item.hasOwnProperty(key)) {
-          result[key] = unsealFhenixSealedItems(item[key], contractAddress, account, fhenixClient);
+          result[key] = unsealLuxFHESealedItems(item[key], contractAddress, account, luxfheClient);
         }
       }
       return result;

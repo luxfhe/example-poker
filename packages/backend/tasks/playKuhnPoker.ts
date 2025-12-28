@@ -3,7 +3,7 @@ import type { TaskArguments } from "hardhat/types";
 import inquirer from "inquirer";
 
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { Permission, Permit } from "fhenixjs";
+import { Permission, Permit } from "LuxFHEjs";
 import {
   ActionOption,
   GameOutcome,
@@ -29,28 +29,28 @@ const cardToLetter = (n: bigint) => {
 };
 
 task("task:playPoker").setAction(async function (taskArguments: TaskArguments, hre) {
-  const { ethers, deployments, fhenixjs } = hre;
+  const { ethers, deployments, LuxFHEjs } = hre;
   const [signer, player, computer] = await ethers.getSigners();
 
-  // Localfhenix
+  // LocalLuxFHE
   console.log("getting deployed contract");
   const kuhnPokerDeployment = await deployments.get("FHEKuhnPoker");
   const kuhnPokerAddress = kuhnPokerDeployment.address;
   const kuhnPoker = await ethers.getContractAt("FHEKuhnPoker", kuhnPokerDeployment.address);
 
   console.log("give signer funds");
-  await fhenixjs.getFunds(signer.address);
+  await LuxFHEjs.getFunds(signer.address);
   console.log("give player funds");
-  await fhenixjs.getFunds(player.address);
+  await LuxFHEjs.getFunds(player.address);
   console.log("give computer funds");
-  await fhenixjs.getFunds(computer.address);
+  await LuxFHEjs.getFunds(computer.address);
 
   // Hardhat
 
   // try {
-  //   await hre.fhenixjs.encrypt(0);
+  //   await hre.LuxFHEjs.encrypt(0);
   // } catch (e) {
-  //   console.log("Fhenix threw expected startup error");
+  //   console.log("LuxFHE threw expected startup error");
   // }
 
   // if (hre.network.name === HARDHAT_NETWORK_NAME) {
@@ -67,7 +67,7 @@ task("task:playPoker").setAction(async function (taskArguments: TaskArguments, h
 
   //   console.info(
   //     chalk.green(
-  //       "Successfully deployed Fhenix mock contracts (solc 0.8.20) on hardhat network",
+  //       "Successfully deployed LuxFHE mock contracts (solc 0.8.20) on hardhat network",
   //     ),
   //   );
   // }
@@ -79,14 +79,14 @@ task("task:playPoker").setAction(async function (taskArguments: TaskArguments, h
 
   // End
 
-  async function createFhenixContractPermission(
+  async function createLuxFHEContractPermission(
     signer: SignerWithAddress,
     contractAddress: string,
   ): Promise<[Permit, Permission]> {
     const provider = ethers.provider;
 
-    const permit = await hre.fhenixjs.generatePermit(contractAddress, provider, signer);
-    const permission = hre.fhenixjs.extractPermitPermission(permit);
+    const permit = await hre.LuxFHEjs.generatePermit(contractAddress, provider, signer);
+    const permission = hre.LuxFHEjs.extractPermitPermission(permit);
 
     return [permit, permission];
   }
@@ -142,10 +142,10 @@ task("task:playPoker").setAction(async function (taskArguments: TaskArguments, h
     const computerChips = await kuhnPoker.chips(computer.address);
     const playerChips = await kuhnPoker.chips(player.address);
 
-    const [computerPermit, computerPermission] = await createFhenixContractPermission(computer, kuhnPokerAddress);
+    const [computerPermit, computerPermission] = await createLuxFHEContractPermission(computer, kuhnPokerAddress);
     const computerCardSealed = await kuhnPoker.connect(computer).getGameCard(computerPermission, gid);
 
-    const [playerPermit, playerPermission] = await createFhenixContractPermission(player, kuhnPokerAddress);
+    const [playerPermit, playerPermission] = await createLuxFHEContractPermission(player, kuhnPokerAddress);
     const playerCardSealed = await kuhnPoker.connect(player).getGameCard(playerPermission, gid);
 
     const playerCard = playerPermit.sealingKey.unseal(playerCardSealed.data);

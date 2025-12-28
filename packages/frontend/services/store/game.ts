@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { useInterval } from "usehooks-ts";
 import { useAccount, useNetwork } from "wagmi";
 import create from "zustand";
-import { useFhenixScaffoldContractRead } from "~~/hooks/scaffold-eth/useFhenixScaffoldContractRead";
+import { useLuxFHEScaffoldContractRead } from "~~/hooks/scaffold-eth/useLuxFHEScaffoldContractRead";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { InjectFhenixPermission } from "~~/utils/fhenixUtilsTypes";
+import { InjectLuxFHEPermission } from "~~/utils/LuxFHEUtilsTypes";
 import { AbiFunctionReturnType, ContractAbi } from "~~/utils/scaffold-eth/contract";
 
 export type ContractUserGameState = AbiFunctionReturnType<ContractAbi<"FHEKuhnPoker">, "getUserGameState">;
@@ -240,7 +240,7 @@ export const useWriteDisabled = () => {
 export const useGameStateUpdater = () => {
   const { address } = useAccount();
 
-  const { data: gameState, refetch } = useFhenixScaffoldContractRead({
+  const { data: gameState, refetch } = useLuxFHEScaffoldContractRead({
     contractName: "FHEKuhnPoker",
     functionName: "getUserGameState",
     args: [address],
@@ -335,10 +335,10 @@ export const useUserChips = () => {
 export const useGamePlayerCardUpdater = () => {
   const gid = useActiveGid();
 
-  const { data: playerCard } = useFhenixScaffoldContractRead({
+  const { data: playerCard } = useLuxFHEScaffoldContractRead({
     contractName: "FHEKuhnPoker",
     functionName: "getGameCard",
-    args: [InjectFhenixPermission, gid == null || gid === 0n ? undefined : gid],
+    args: [InjectLuxFHEPermission, gid == null || gid === 0n ? undefined : gid],
   });
 
   useEffect(() => {

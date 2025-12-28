@@ -2,7 +2,7 @@
 
 import type { NextPage } from "next";
 import { useEffect } from "react";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
 import { useFetchBlocks } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { notification } from "~~/utils/scaffold-eth";
@@ -13,7 +13,7 @@ const BlockExplorer: NextPage = () => {
   const { targetNetwork } = useTargetNetwork();
 
   useEffect(() => {
-    if (targetNetwork.id === fhenixLocal.id && error) {
+    if (targetNetwork.id === luxfheLocal.id && error) {
       notification.error(
         <>
           <p className="font-bold mt-0 mb-1">Cannot connect to local provider</p>
@@ -28,7 +28,7 @@ const BlockExplorer: NextPage = () => {
       );
     }
 
-    if (targetNetwork.id !== fhenixLocal.id) {
+    if (targetNetwork.id !== luxfheLocal.id) {
       notification.error(
         <>
           <p className="font-bold mt-0 mb-1">

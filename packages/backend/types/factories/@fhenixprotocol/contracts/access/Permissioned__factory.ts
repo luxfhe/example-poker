@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   Permissioned,
   PermissionedInterface,
-} from "../../../../@fhenixprotocol/contracts/access/Permissioned";
+} from "../../../../@luxfhe/contracts/access/Permissioned";
 
 const _abi = [
   {

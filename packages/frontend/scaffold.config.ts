@@ -1,5 +1,5 @@
 import * as chains from "viem/chains";
-import { fhenixLocal, fhenixFrontier } from "~~/config/fhenixNetworks";
+import { luxfheLocal, luxfheFrontier } from "~~/config/luxfheNetworks";
 
 export type ScaffoldConfig = {
   targetNetworks: readonly chains.Chain[];
@@ -12,7 +12,7 @@ export type ScaffoldConfig = {
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [fhenixLocal, fhenixFrontier],
+  targetNetworks: [luxfheLocal, luxfheFrontier],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)

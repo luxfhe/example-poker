@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   FheOps,
   FheOpsInterface,
-} from "../../../../@fhenixprotocol/contracts/FheOS.sol/FheOps";
+} from "../../../../@luxfhe/contracts/FheOS.sol/FheOps";
 
 const _abi = [
   {

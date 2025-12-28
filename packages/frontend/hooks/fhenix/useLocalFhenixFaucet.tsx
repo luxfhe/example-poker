@@ -1,6 +1,6 @@
 import { WalletClient } from "viem";
 import { useWalletClient } from "wagmi";
-import { FHENIX_LOCAL_FAUCET_URL } from "~~/config/fhenix";
+import { LuxFHE_LOCAL_FAUCET_URL } from "~~/config/luxfhe";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
 type RequestFunc = (to: string) => Promise<string | undefined>;
@@ -21,7 +21,7 @@ const RequestNotification = ({ message }: { message: string }) => {
  * @param _walletClient - Optional wallet client to use. If not provided, will use the one from useWalletClient.
  * @returns function that takes in transaction function as callback, shows UI feedback for transaction and returns a promise of the transaction hash
  */
-export const useLocalFhenixFaucet = (_walletClient?: WalletClient): RequestFunc => {
+export const useLocalLuxFHEFaucet = (_walletClient?: WalletClient): RequestFunc => {
   let walletClient = _walletClient;
   const { data } = useWalletClient();
   if (walletClient === undefined && data) {
@@ -31,7 +31,7 @@ export const useLocalFhenixFaucet = (_walletClient?: WalletClient): RequestFunc 
   const result: RequestFunc = async (to: string) => {
     if (walletClient == null) {
       notification.error("Cannot access faucet");
-      console.error("⚡️ ~ file: useLocalFhenixFaucet.tsx ~ error");
+      console.error("⚡️ ~ file: useLocalLuxFHEFaucet.tsx ~ error");
       return;
     }
 
@@ -41,7 +41,7 @@ export const useLocalFhenixFaucet = (_walletClient?: WalletClient): RequestFunc 
 
     try {
       const fetchResult = await fetch(
-        FHENIX_LOCAL_FAUCET_URL +
+        LuxFHE_LOCAL_FAUCET_URL +
           "?" +
           new URLSearchParams({
             address: to,
@@ -71,7 +71,7 @@ export const useLocalFhenixFaucet = (_walletClient?: WalletClient): RequestFunc 
       if (notificationId) {
         notification.remove(notificationId);
       }
-      console.error("⚡️ ~ file: useLocalFhenixFaucet.tsx ~ error", error);
+      console.error("⚡️ ~ file: useLocalLuxFHEFaucet.tsx ~ error", error);
       const message = getParsedError(error);
       notification.error(message);
       throw error;

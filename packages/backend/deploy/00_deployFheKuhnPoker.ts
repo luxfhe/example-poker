@@ -24,11 +24,11 @@ const deployFheKuhnPoker: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deploy } = hre.deployments;
 
   // Fund the account before deploying.
-  if (hre.network.name === "localfhenix") {
+  if (hre.network.name === "localluxfhe") {
     const signers = await hre.ethers.getSigners();
 
     if ((await hre.ethers.provider.getBalance(signers[0].address)).toString() === "0") {
-      await hre.fhenixjs.getFunds(signers[0].address);
+      await hre.luxfhejs.getFunds(signers[0].address);
       console.log("Received tokens from the local faucet. Ready to deploy...");
     }
   }

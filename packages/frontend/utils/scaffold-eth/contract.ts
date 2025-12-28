@@ -24,10 +24,10 @@ import deployedContractsData from "~~/contracts/deployedContracts";
 import externalContractsData from "~~/contracts/externalContracts";
 import scaffoldConfig from "~~/scaffold.config";
 import {
-  FhenixMappedInputTypes,
-  FhenixUtilsTypeModificationOption,
-  FhenixMappedOutputTypes,
-} from "../fhenixUtilsTypes";
+  LuxFHEMappedInputTypes,
+  LuxFHEUtilsTypeModificationOption,
+  LuxFHEMappedOutputTypes,
+} from "../luxfheUtilsTypes";
 
 type AddExternalFlag<T> = {
   [ChainId in keyof T]: {
@@ -115,15 +115,15 @@ type Normalize<T> = T extends (...args: infer A) => infer R
 export type AbiFunctionReturnType<
   TAbi extends Abi,
   TFunctionName extends string,
-  TFhenixMapType extends FhenixUtilsTypeModificationOption = "raw",
-> = FhenixMappedOutputTypes<
+  TLuxFHEMapType extends LuxFHEUtilsTypeModificationOption = "raw",
+> = LuxFHEMappedOutputTypes<
   IsContractDeclarationMissing<
     any,
     AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>> extends readonly [any]
       ? AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>>[0]
       : AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>>
   >,
-  TFhenixMapType
+  TLuxFHEMapType
 >;
 
 export type AbiEventInputs<TAbi extends Abi, TEventName extends ExtractAbiEventNames<TAbi>> = ExtractAbiEvent<
@@ -170,16 +170,16 @@ export type OptionalTupple<T> = T extends readonly [infer H, ...infer R]
 export type UseScaffoldArgsParam<
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>>,
-  TFhenixMapType extends FhenixUtilsTypeModificationOption = "raw",
+  TLuxFHEMapType extends LuxFHEUtilsTypeModificationOption = "raw",
 > = TFunctionName extends FunctionNamesWithInputs<TContractName>
   ? {
       args: OptionalTupple<
         UnionToIntersection<
           Normalize<
-            FhenixMappedInputTypes<
+            LuxFHEMappedInputTypes<
               // Args
               AbiFunctionArguments<ContractAbi<TContractName>, TFunctionName>,
-              TFhenixMapType
+              TLuxFHEMapType
             >
           >
         >
@@ -202,7 +202,7 @@ export type UseScaffoldReadConfig<
     Omit<UseContractReadConfig, "chainId" | "abi" | "address" | "functionName" | "args">
 >;
 
-export type UseFhenixScaffoldReadConfig<
+export type UseLuxFHEScaffoldReadConfig<
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, ReadAbiStateMutability>,
 > = {
@@ -211,7 +211,7 @@ export type UseFhenixScaffoldReadConfig<
   Partial<UseContractReadConfig>,
   {
     functionName: TFunctionName;
-  } & UseScaffoldArgsParam<TContractName, TFunctionName, "fhenix-utils-modified"> &
+  } & UseScaffoldArgsParam<TContractName, TFunctionName, "luxfhe-utils-modified"> &
     Omit<UseContractReadConfig, "chainId" | "abi" | "address" | "functionName" | "args">
 >;
 
@@ -230,7 +230,7 @@ export type UseScaffoldWriteConfig<
     Omit<UseContractWriteConfig, "chainId" | "abi" | "address" | "functionName" | "args" | "mode">
 >;
 
-export type UseFhenixScaffoldWriteConfig<
+export type UseLuxFHEScaffoldWriteConfig<
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, WriteAbiStateMutability>,
 > = {
@@ -241,7 +241,7 @@ export type UseFhenixScaffoldWriteConfig<
   Partial<UseContractWriteConfig>,
   {
     functionName: TFunctionName;
-  } & UseScaffoldArgsParam<TContractName, TFunctionName, "fhenix-utils-modified"> &
+  } & UseScaffoldArgsParam<TContractName, TFunctionName, "luxfhe-utils-modified"> &
     Omit<UseContractWriteConfig, "chainId" | "abi" | "address" | "functionName" | "args" | "mode">
 >;
 

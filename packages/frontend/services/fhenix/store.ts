@@ -1,5 +1,5 @@
 import { BrowserProvider, Eip1193Provider } from "ethers";
-import { FhenixClientSync, Permit } from "fhenixjs";
+import { LuxFHEClientSync, Permit } from "LuxFHEjs";
 import { useCallback, useEffect } from "react";
 import { Chain, Client, Transport } from "viem";
 import { useWalletClient } from "wagmi";
@@ -7,16 +7,16 @@ import create from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 type ContractAccountKey = `0x${string}_0x${string}`;
-type FhenixState = {
+type LuxFHEState = {
   initializedAccount: string | undefined;
-  client: FhenixClientSync | undefined;
+  client: LuxFHEClientSync | undefined;
   contractAccountPermits: Record<ContractAccountKey, Permit>;
 };
 
-export const useFhenixState = create<FhenixState>()(
+export const useLuxFHEState = create<LuxFHEState>()(
   immer(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (set, get): FhenixState => ({
+    (set, get): LuxFHEState => ({
       initializedAccount: undefined,
       client: undefined,
       contractAccountPermits: {},
@@ -24,16 +24,16 @@ export const useFhenixState = create<FhenixState>()(
   ),
 );
 
-export const initFhenixClient = async (walletClient: Client<Transport, Chain>) => {
+export const initLuxFHEClient = async (walletClient: Client<Transport, Chain>) => {
   // Exit if account hasn't changed (no need to update)
   const account = walletClient.account?.address;
-  if (account === useFhenixState.getState().initializedAccount) return;
+  if (account === useLuxFHEState.getState().initializedAccount) return;
 
   // const wagmiToEthersProvider = clientToProvider(walletClient);
   const provider = new BrowserProvider(window.ethereum as Eip1193Provider);
 
   // @ts-expect-error Type mismatch on `provider.send`
-  const client = await FhenixClientSync.create({ provider });
+  const client = await LuxFHEClientSync.create({ provider });
 
   const loadedPermits = account == null ? null : client.loadAllPermitsFromLocalStorage(account);
 
@@ -45,17 +45,17 @@ export const initFhenixClient = async (walletClient: Client<Transport, Chain>) =
     });
   }
 
-  useFhenixState.setState({
+  useLuxFHEState.setState({
     initializedAccount: account,
     client,
     contractAccountPermits: loadedPermitsWithAccount,
   });
 };
 
-export const getOrCreateFhenixPermit = async (contractAddress?: `0x${string}`, account?: `0x${string}`) => {
+export const getOrCreateLuxFHEPermit = async (contractAddress?: `0x${string}`, account?: `0x${string}`) => {
   if (contractAddress == null || account == null) return;
 
-  const client = useFhenixState.getState().client;
+  const client = useLuxFHEState.getState().client;
   if (client == null || contractAddress == null || account == null) return;
 
   let permit = client.getPermit(contractAddress, account);
@@ -63,32 +63,32 @@ export const getOrCreateFhenixPermit = async (contractAddress?: `0x${string}`, a
     permit = await client.generatePermit(contractAddress);
   }
 
-  useFhenixState.setState(draft => {
+  useLuxFHEState.setState(draft => {
     draft.contractAccountPermits[`${contractAddress}_${account}`] = permit;
   });
 };
 
-export const getFhenixPermit = (contractAddress: `0x${string}`, account: `0x${string}`) => {
+export const getLuxFHEPermit = (contractAddress: `0x${string}`, account: `0x${string}`) => {
   const key: ContractAccountKey = `${contractAddress}_${account}`;
-  return useFhenixState.getState().contractAccountPermits[key];
+  return useLuxFHEState.getState().contractAccountPermits[key];
 };
 
 // HOOKS
 
-export const useInitFhenixClient = () => {
+export const useInitLuxFHEClient = () => {
   return useCallback((client: Client<Transport, Chain>) => {
-    initFhenixClient(client);
+    initLuxFHEClient(client);
   }, []);
 };
-export const useCreateFhenixPermit = () => {
-  return useCallback(getOrCreateFhenixPermit, []);
+export const useCreateLuxFHEPermit = () => {
+  return useCallback(getOrCreateLuxFHEPermit, []);
 };
 
-export const useFhenixClient = () => {
-  return useFhenixState(state => state.client);
+export const useLuxFHEClient = () => {
+  return useLuxFHEState(state => state.client);
 };
-export const useFhenixPermit = (contractAddress: `0x${string}` | undefined, account: `0x${string}` | undefined) => {
-  return useFhenixState(state => {
+export const useLuxFHEPermit = (contractAddress: `0x${string}` | undefined, account: `0x${string}` | undefined) => {
+  return useLuxFHEState(state => {
     if (contractAddress == null || account == null) return { permit: undefined, permission: undefined };
 
     const key: ContractAccountKey = `${contractAddress}_${account}`;
@@ -104,12 +104,12 @@ export const useFhenixPermit = (contractAddress: `0x${string}` | undefined, acco
 };
 
 // WAGMI hooks (useAccount)
-export const useWagmiInitFhenixClient = () => {
-  const initFhenixClient = useInitFhenixClient();
+export const useWagmiInitLuxFHEClient = () => {
+  const initLuxFHEClient = useInitLuxFHEClient();
   const { data: walletClient } = useWalletClient();
 
   useEffect(() => {
     if (walletClient == null) return;
-    initFhenixClient(walletClient);
-  }, [walletClient, initFhenixClient]);
+    initLuxFHEClient(walletClient);
+  }, [walletClient, initLuxFHEClient]);
 };

@@ -1,73 +1,73 @@
 import { BrowserProvider, Eip1193Provider, JsonRpcProvider } from "ethers";
 import { useEffect, useRef, useState } from "react";
-import { FhenixClientSync, Permit } from "fhenixjs";
+import { LuxFHEClientSync, Permit } from "luxfhejs";
 import { useAccount } from "wagmi";
 
-const useFhenix = () => {
-  const fhenixProvider = useRef<JsonRpcProvider | BrowserProvider>();
-  const fhenixClient = useRef<FhenixClientSync>();
+const useLuxFHE = () => {
+  const luxfheProvider = useRef<JsonRpcProvider | BrowserProvider>();
+  const luxfheClient = useRef<LuxFHEClientSync>();
 
-  const initFhenixProvider = () => {
-    if (fhenixProvider.current != null) {
-      return fhenixProvider.current;
+  const initLuxFHEProvider = () => {
+    if (luxfheProvider.current != null) {
+      return luxfheProvider.current;
     }
 
     // Initialize the provider.
     // @todo: Find a way not to use ethers.BrowserProvider because we already have viem and wagmi here.
-    fhenixProvider.current = new BrowserProvider(window.ethereum as Eip1193Provider);
-    // fhenixProvider.current = new JsonRpcProvider(connectedChain?.rpcUrls.default.http[0]);
+    luxfheProvider.current = new BrowserProvider(window.ethereum as Eip1193Provider);
+    // luxfheProvider.current = new JsonRpcProvider(connectedChain?.rpcUrls.default.http[0]);
   };
 
-  const initFhenixClient = async () => {
-    if (fhenixClient.current != null) {
-      return fhenixClient.current;
+  const initLuxFHEClient = async () => {
+    if (luxfheClient.current != null) {
+      return luxfheClient.current;
     }
 
-    initFhenixProvider();
+    initLuxFHEProvider();
 
-    if (fhenixProvider.current != null) {
+    if (luxfheProvider.current != null) {
       // @ts-expect-error Type mismatch on `provider.send`
-      fhenixClient.current = await FhenixClientSync.create({ provider: fhenixProvider.current });
+      luxfheClient.current = await LuxFHEClientSync.create({ provider: luxfheProvider.current });
     }
   };
 
   useEffect(() => {
-    initFhenixProvider();
-    initFhenixClient();
+    initLuxFHEProvider();
+    initLuxFHEClient();
   }, []);
 
   return {
-    fhenixClient: fhenixClient.current,
-    fhenixProvider: fhenixProvider.current,
+    luxfheClient: luxfheClient.current,
+    luxfheProvider: luxfheProvider.current,
   };
 };
 
-export default useFhenix;
+export default useLuxFHE;
 
-export const useFhenixPermit = (contractAddress: `0x${string}` | undefined) => {
-  const { fhenixClient } = useFhenix();
+export const useLuxFHEPermit = (contractAddress: `0x${string}` | undefined) => {
+  const { luxfheClient } = useLuxFHE();
   const { address } = useAccount();
   const [permit, setPermit] = useState<Permit | undefined>(undefined);
 
   useEffect(() => {
     const getOrGeneratePermit = async () => {
-      if (fhenixClient == null || contractAddress == null || address == null) return;
+      if (luxfheClient == null || contractAddress == null || address == null) return;
 
-      let permit = fhenixClient.getPermit(contractAddress, undefined as any);
+      let permit = luxfheClient.getPermit(contractAddress, undefined as any);
       if (permit == null) {
-        permit = await fhenixClient.generatePermit(contractAddress);
+        permit = await luxfheClient.generatePermit(contractAddress);
       }
 
       setPermit(permit);
     };
 
     getOrGeneratePermit();
-  }, [address, contractAddress, fhenixClient]);
+  }, [address, contractAddress, luxfheClient]);
 
-  if (permit == null || fhenixClient == null) return { permit: undefined, permission: undefined };
+  if (permit == null || luxfheClient == null) return { permit: undefined, permission: undefined };
 
   return {
     permit,
-    permission: fhenixClient?.extractPermitPermission(permit),
+    permission: luxfheClient?.extractPermitPermission(permit),
   };
 };

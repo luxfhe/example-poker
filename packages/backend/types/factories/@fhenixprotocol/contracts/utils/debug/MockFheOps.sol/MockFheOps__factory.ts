@@ -12,7 +12,7 @@ import type { NonPayableOverrides } from "../../../../../../common";
 import type {
   MockFheOps,
   MockFheOpsInterface,
-} from "../../../../../../@fhenixprotocol/contracts/utils/debug/MockFheOps.sol/MockFheOps";
+} from "../../../../../../@luxfhe/contracts/utils/debug/MockFheOps.sol/MockFheOps";
 
 const _abi = [
   {

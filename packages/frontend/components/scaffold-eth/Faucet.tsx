@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { Address as AddressType, createWalletClient, http } from "viem";
 import { useAccount, useNetwork } from "wagmi";
 import { AddressInput } from "~~/components/scaffold-eth";
-import { fhenixLocal } from "~~/config/fhenixNetworks";
-import { useLocalFhenixFaucet } from "~~/hooks/fhenix/useLocalFhenixFaucet";
+import { luxfheLocal } from "~~/config/luxfheNetworks";
+import { useLocalLuxFHEFaucet } from "~~/hooks/luxfhe/useLocalLuxFHEFaucet";
 
 const localWalletClient = createWalletClient({
-  chain: fhenixLocal,
+  chain: luxfheLocal,
   transport: http(),
 });
 
@@ -23,7 +23,7 @@ export const Faucet = () => {
 
   const { chain: ConnectedChain } = useNetwork();
 
-  const faucetRequest = useLocalFhenixFaucet(localWalletClient);
+  const faucetRequest = useLocalLuxFHEFaucet(localWalletClient);
 
   useEffect(() => {
     setInputAddress(address);
@@ -45,7 +45,7 @@ export const Faucet = () => {
   };
 
   // Render only on local chain
-  if (ConnectedChain?.id !== fhenixLocal.id) {
+  if (ConnectedChain?.id !== luxfheLocal.id) {
     return null;
   }
 
