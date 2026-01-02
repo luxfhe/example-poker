@@ -9,8 +9,8 @@ import {
   walletActions,
   webSocket,
 } from "viem";
-import { LuxFHE_LOCAL_WEBSOCKETS_URL } from "~~/config/LuxFHE";
-import { LuxFHELocal } from "~~/config/LuxFHENetworks";
+import { LuxFHE_LOCAL_WEBSOCKETS_URL } from "~~/config/luxfhe";
+import { LuxFHELocal } from "~~/config/luxfheNetworks";
 import { decodeTransactionData } from "~~/utils/scaffold-eth";
 
 const BLOCKS_PER_PAGE = 20;

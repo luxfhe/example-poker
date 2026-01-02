@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.13 <0.9.0;
 
-import { euint8, FHE, SealedUint } from "@luxfhe/contracts/FHE.sol";
-import { Permissioned, Permission } from "@luxfhe/contracts/access/Permissioned.sol";
+import { euint8, FHE, SealedUint } from "@luxfi/contracts/fhe/FHE.sol";
+import { Permissioned, Permission } from "@luxfi/contracts/fhe/access/Permissioned.sol";
 import { EnumerableSet } from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 // Kuhn Poker (https://en.wikipedia.org/wiki/Kuhn_poker) on LuxFHE

@@ -28,7 +28,7 @@ const deployFheKuhnPoker: DeployFunction = async function (hre: HardhatRuntimeEn
     const signers = await hre.ethers.getSigners();
 
     if ((await hre.ethers.provider.getBalance(signers[0].address)).toString() === "0") {
-      await hre.luxfhejs.getFunds(signers[0].address);
+      await hre.luxfhe.getFunds(signers[0].address);
       console.log("Received tokens from the local faucet. Ready to deploy...");
     }
   }

@@ -1,0 +1,380 @@
+import { EncryptedNumber, LuxFHEClientSync } from "~~/lib/luxfhe";
+import {
+  EncryptablePrimitive,
+  EncryptableBool,
+  EncryptableUint8,
+  EncryptableUint16,
+  EncryptableUint32,
+  EncryptableUint64,
+  EncryptableUint128,
+  EncryptableUint256,
+  EncryptableAddress,
+  EncryptableItem,
+  TFHE_UTYPE,
+  EncryptedItem,
+  DSealedOutputBool,
+  DSealedOutputUint,
+  DSealedOutputAddress,
+  LuxFHEMappedOutputTypes,
+} from "./luxfheUtilsTypes";
+import { toHex } from "viem";
+
+function hexlifyData<T extends EncryptedNumber>(t: T): T {
+  return {
+    ...t,
+    data: toHex(t.data),
+  };
+}
+
+function isEncryptablePrimitive(item: unknown): item is EncryptableItem {
+  if (typeof item === "object" && item !== null) {
+    const obj = item as Record<string, unknown>;
+    return (
+      obj.type === "luxfhe-encryptable-input-primitive" &&
+      (typeof obj.securityZone === "undefined" || typeof obj.securityZone === "number")
+    );
+  }
+  return false;
+}
+
+/**
+ * Encrypting option for any data type *(including nested data structures)*. Any EncryptableItems will be encrypted into the LuxFHE FHE ready form.
+ *
+ * ```
+ * encrypt([EncryptableUint8, number, { a: EncryptableBool, b: string }]);
+ * // [EncryptedUint8, number, { a: EncryptedBool, b: string }]
+ *
+ * encrypt(EncryptableAddress)
+ * // EncryptedAddress
+ * ```
+ *
+ * @param item - Item to be encrypted, nested datatypes will be traversed and children encrypted.
+ * @param luxfheClient
+ * @returns - Item with self and children encrypted
+ */
+function encrypt<T>(item: T, luxfheClient: LuxFHEClientSync | undefined): EncryptedItem<T> | undefined {
+  if (luxfheClient == null) return undefined;
+
+  // Check if the item is a EncryptableBase and return 'encrypted'
+  if (isEncryptablePrimitive(item)) {
+    return item.encrypt(luxfheClient) as EncryptedItem<T>;
+  }
+
+  // If the item is an array, recursively process each element
+  if (Array.isArray(item)) {
+    return item.map(nestedItem => encrypt(nestedItem, luxfheClient)) as EncryptedItem<T>;
+  }
+
+  // If the item is an object, recursively process each property
+  if (typeof item === "object" && item !== null) {
+    const result: Record<string, unknown> = {};
+    for (const [key, nestedItem] of Object.entries(item)) {
+      result[key] = encrypt(nestedItem, luxfheClient);
+    }
+    return result as EncryptedItem<T>;
+  }
+
+  // If the item is neither encryptable nor nested, return the item unchanged
+  return item as EncryptedItem<T>;
+}
+
+/**
+ * Create `EncryptableBool`, encrypts to `EncryptedBool (inEbool)`
+ */
+const createEncryptableBool = (value: boolean, securityZone = 0): EncryptableBool => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Bool,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_bool(this.value));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint8`, encrypts to `EncryptedUint8 (inEuint8)`
+ */
+const createEncryptableUint8 = (value: bigint | number | string, securityZone = 0): EncryptableUint8 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint8,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint8(Number(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint16`, encrypts to `EncryptedUint16 (inEuint16)`
+ */
+const createEncryptableUint16 = (value: bigint | number | string, securityZone = 0): EncryptableUint16 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint16,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint16(Number(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint32`, encrypts to `EncryptedUint32 (inEuint32)`
+ */
+const createEncryptableUint32 = (value: bigint | number | string, securityZone = 0): EncryptableUint32 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint32,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint32(Number(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint64`, encrypts to `EncryptedUint64 (inEuint64)`
+ */
+const createEncryptableUint64 = (value: bigint | number | string, securityZone = 0): EncryptableUint64 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint64,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint64(BigInt(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint128`, encrypts to `EncryptedUint128 (inEuint128)`
+ */
+const createEncryptableUint128 = (value: bigint | number | string, securityZone = 0): EncryptableUint128 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint128,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint128(BigInt(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableUint256`, encrypts to `EncryptedUint256 (inEuint256)`
+ */
+const createEncryptableUint256 = (value: bigint | number | string, securityZone = 0): EncryptableUint256 => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Uint256,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_uint256(BigInt(this.value)));
+    },
+  };
+};
+
+/**
+ * Create `EncryptableAddress`, encrypts to `EncryptedAddress (inEaddress)`
+ */
+const createEncryptableAddress = (value: `0x${string}`, securityZone = 0): EncryptableAddress => {
+  return {
+    type: "luxfhe-encryptable-input-primitive",
+    securityZone,
+    subtype: EncryptablePrimitive.Address,
+    value,
+    encrypt: function (luxfheClient) {
+      if (luxfheClient == null) return undefined;
+      return hexlifyData(luxfheClient.encrypt_address(this.value));
+    },
+  };
+};
+
+/**
+ * **Convenience functions for creating and encrypting values to be passed to LuxFHE FHE powered smart contracts.**
+ *
+ * Usage:
+ *
+ * ```
+ * const n: EncryptableUint8 = Encryptable.uint8(5);
+ * const e: EncryptedUint8 = n.encrypt(client);
+ * ```
+ */
+export const Encryptable = {
+  // Create
+  bool: createEncryptableBool,
+  uint8: createEncryptableUint8,
+  uint16: createEncryptableUint16,
+  uint32: createEncryptableUint32,
+  uint64: createEncryptableUint64,
+  uint128: createEncryptableUint128,
+  uint256: createEncryptableUint256,
+  address: createEncryptableAddress,
+
+  encrypt,
+};
+
+// const luxfheClient = {} as any;
+
+// const encryptableUint8Narrowed = createEncryptableUint8<string>("5");
+// const encryptedUint8Narrowed = encryptEncryptable(encryptableUint8Narrowed, luxfheClient);
+
+// const encryptableUint8 = createEncryptableUint8("5");
+// const encryptedUint8 = encryptEncryptable(encryptableUint8, luxfheClient);
+
+// const encryptableBool = createEncryptableBool(false);
+// const encryptedBool = encryptEncryptable(encryptableBool, luxfheClient);
+
+// const encryptableObject = createEncryptableObject({ a: 5, b: createEncryptableUint8(5n) });
+// const encryptedObject = encryptEncryptable(encryptableObject, luxfheClient);
+
+// const encryptableObjectInObject = createEncryptableObject({
+//   a: 5,
+//   b: createEncryptableUint8(5n),
+//   c: createEncryptableObject({ a: "hello", b: createEncryptableBool(false) }),
+// });
+// const encryptedObjectInObject = encryptEncryptable(encryptableObjectInObject, luxfheClient);
+
+// const encryptableArray = createEncryptableArray([5, createEncryptableUint8(5n)]);
+// const encryptedArray = encryptEncryptable(encryptableArray, luxfheClient);
+
+// const encryptableArrayInArray = createEncryptableArray([
+//   5,
+//   createEncryptableUint8(5n),
+//   createEncryptableArray(["hello", createEncryptableBool(false)]),
+// ]);
+// const encryptedArrayInArray = encryptEncryptable(encryptableArrayInArray, luxfheClient);
+
+// const encryptableArrayInObject = createEncryptableObject({
+//   a: 5,
+//   b: createEncryptableUint8(5n),
+//   c: createEncryptableArray(["hello", createEncryptableBool(false)]),
+// });
+// const encryptedArrayInObject = encryptEncryptable(encryptableArrayInObject, luxfheClient);
+
+// const encryptableObjectInArray = Encryptable.array([
+//   5,
+//   Encryptable.uint8("5"),
+//   Encryptable.uint8<bigint>(5n),
+//   Encryptable.object({
+//     a: 5,
+//     b: Encryptable.bool(false),
+//   }),
+// ]);
+
+/*
+
+  const encryptableObjectInArray: EncryptableArray<[
+    number,
+    EncryptableUint8<string | number | bigint>,
+    EncryptableUint8<bigint>,
+    EncryptableObject<{
+      a: number;
+      b: EncryptableBool;
+    }>
+  ]>
+
+*/
+
+// const encryptedObjectInArray = await Encryptable.encrypt(encryptableObjectInArray, luxfheClient);
+
+/*
+
+  const encryptedObjectInArray: [
+    number,
+    EncryptedUint8,
+    EncryptedUint8,
+    {
+      a: number;
+      b: EncryptedBool;
+    }
+  ]
+
+*/
+
+// UNSEALABLE
+
+const isLuxFHESealedAddress = (item: any): item is DSealedOutputAddress => {
+  return item && typeof item === "object" && item.utype === TFHE_UTYPE.EADDRESS;
+};
+
+const isLuxFHESealedBool = (item: any): item is DSealedOutputBool => {
+  return item && typeof item === "object" && item.utype === TFHE_UTYPE.EBOOL;
+};
+
+const isLuxFHESealedUint = (item: any): item is DSealedOutputUint => {
+  return item && typeof item === "object" && TFHE_UTYPE.EUINT.includes(item.utype);
+};
+
+const sealedBoolItem = {
+  data: "0x000",
+  utype: 12,
+  type: "luxfhe-sealed-output",
+} as DSealedOutputAddress;
+
+const test = unsealLuxFHESealedItems([sealedBoolItem, sealedBoolItem], "0x...", "0x...", {} as LuxFHEClientSync);
+
+export function unsealLuxFHESealedItems<T extends any[]>(
+  item: [...T],
+  contractAddress: `0x${string}`,
+  account: `0x${string}`,
+  luxfheClient: LuxFHEClientSync,
+): [...LuxFHEMappedOutputTypes<T, "luxfhe-utils-modified">];
+export function unsealLuxFHESealedItems<T>(
+  item: T,
+  contractAddress: `0x${string}`,
+  account: `0x${string}`,
+  luxfheClient: LuxFHEClientSync,
+): LuxFHEMappedOutputTypes<T, "luxfhe-utils-modified">;
+export function unsealLuxFHESealedItems<T>(
+  item: T,
+  contractAddress: `0x${string}`,
+  account: `0x${string}`,
+  luxfheClient: LuxFHEClientSync,
+) {
+  if (isLuxFHESealedAddress(item)) {
+    // return luxfheClient.unseal(contractAddress, item.data, account)
+    return `0xFILL_ME_OUT_IN_UNSEAL_ITEM` as string;
+  }
+  if (isLuxFHESealedUint(item)) {
+    return luxfheClient.unseal(contractAddress, item.data, account);
+  }
+  if (isLuxFHESealedBool(item)) {
+    const unsealed = luxfheClient.unseal(contractAddress, item.data, account);
+    return unsealed === 1n;
+  }
+
+  if (typeof item === "object" && item !== null) {
+    // Handle array
+    if (Array.isArray(item)) {
+      return item.map(nestedItem => unsealLuxFHESealedItems(nestedItem, contractAddress, account, luxfheClient));
+    } else {
+      // Handle object
+      const result: any = {};
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          result[key] = unsealLuxFHESealedItems(item[key], contractAddress, account, luxfheClient);
+        }
+      }
+      return result;
+    }
+  }
+
+  return item;
+}

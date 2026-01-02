@@ -5,7 +5,7 @@ import { useAccount, useNetwork } from "wagmi";
 import create from "zustand";
 import { useLuxFHEScaffoldContractRead } from "~~/hooks/scaffold-eth/useLuxFHEScaffoldContractRead";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { InjectLuxFHEPermission } from "~~/utils/LuxFHEUtilsTypes";
+import { InjectLuxFHEPermission } from "~~/utils/luxfheUtilsTypes";
 import { AbiFunctionReturnType, ContractAbi } from "~~/utils/scaffold-eth/contract";
 
 export type ContractUserGameState = AbiFunctionReturnType<ContractAbi<"FHEKuhnPoker">, "getUserGameState">;
